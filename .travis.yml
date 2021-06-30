@@ -23,3 +23,16 @@ before_install:
 #if we don't add these tags travis CI will wait indefinately for a return and wait for the output
 script:
   - docker run -e CI=true incognito23/docker-react npm run test
+
+#AWS elasticbeanstalk specific info
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-us-east-2-776959113865"          #s3 bucket name
+  bucket_path: "docker-react"
+  on:               #only deploy code when master branch gets updated
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
