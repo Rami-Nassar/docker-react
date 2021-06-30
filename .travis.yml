@@ -1,0 +1,25 @@
+language: generic
+
+#need super user level permission
+sudo: required
+
+#need to tell travis ci that we need docker cli installed
+services:
+  - docker
+
+#series of commands/steps/setup executed before we deploy our project
+#before we run our tests etc.
+#put a tag on image to refer to image, since we won't be able to directly copy paste imageIDs
+#tag convention: dockerUserName/repoName
+before_install:
+  - docker build -t incognito23/docker-react -f Dockerfile.dev .
+
+#contain all the different commands that need to be executed to run our test suite
+#travic CI will be watching the output of these commands
+#return status code other than 0 => travis registering a failure.
+#need to add additional flags for npm run test since default behaviour is that
+#it executes then waits for further input from the user for various other testing options
+#it never returns on its own back to the terminal. 
+#if we don't add these tags travis CI will wait indefinately for a return and wait for the output
+script:
+  - docker run -e CI=true incognito23/docker-react npm run test
